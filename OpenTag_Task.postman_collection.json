@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "ca966c27-8559-4360-902a-00cbaa949899",
+		"name": "OpenTag Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19610413"
+	},
+	"item": [
+		{
+			"name": "First Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"title=response.data.film.title",
+							"pm.test('Title Has to be \"A New Hope\"', ()=> {",
+							"    pm.expect(title).to.eq(\"A New Hope\")})",
+							"",
+							"droidID=response.data.film.speciesConnection.species[1].id",
+							"pm.environment.set(\"droidID\", droidID);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Root ($episodeID:ID) {\n\tfilm (filmID:$episodeID){\n    title\n    speciesConnection{\n      species {\n        name\n        id\n      }\n    }\n  }\n}",
+						"variables": "{\n    \"episodeID\": {{episodeID}}\n}"
+					}
+				},
+				"url": {
+					"raw": "https://swapi-graphql.netlify.app/.netlify/functions/index",
+					"protocol": "https",
+					"host": [
+						"swapi-graphql",
+						"netlify",
+						"app"
+					],
+					"path": [
+						".netlify",
+						"functions",
+						"index"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Second Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"species=response.data.species.name",
+							"people=response.data.species.personConnection.people",
+							"console.log(people)",
+							"pm.test('Spicies must be Droid\"', ()=> {",
+							"    pm.expect(species).to.eq(\"Droid\")})",
+							"",
+							"console.log(people[0])",
+							"for (let i = 0; i < people.length; i++){",
+							"    pm.test('Test for (name,birth,eyes) present in property', function() {",
+							"    pm.expect(people[i]).to.have.property('name');",
+							"    pm.expect(people[i]).to.have.property('birthYear');",
+							"    pm.expect(people[i]).to.have.property('eyeColor');",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Root ($speciesID:ID)\n{\n  species(id:$speciesID){\n\t\tname\n    personConnection{\n      people{\n        name\n        birthYear\n        eyeColor\n      }\n    }\n\t\thomeworld{\n      name\n    }\n  }\n}",
+						"variables": "{\n\"speciesID\":\"{{droidID}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "https://swapi-graphql.netlify.app/.netlify/functions/index",
+					"protocol": "https",
+					"host": [
+						"swapi-graphql",
+						"netlify",
+						"app"
+					],
+					"path": [
+						".netlify",
+						"functions",
+						"index"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Third Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"character=response.data.film.characterConnection.characters[3]",
+							"pm.test('Person Must be Equal to Darth Vader\"', ()=> {",
+							"    pm.expect(character.name).to.eq(\"Darth Vader\")})",
+							"pm.environment.set(\"darthVaderId\",character.id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Root ($filmID:ID)\n{\n  film(filmID:$filmID){\n    title\n    characterConnection{\n      totalCount\n      characters{\n        id\n        name\n        gender\n      }\n    }\n  }\n}\n",
+						"variables": "{\n    \"filmID\":{{episodeID}}\n}"
+					}
+				},
+				"url": {
+					"raw": "https://swapi-graphql.netlify.app/.netlify/functions/index",
+					"protocol": "https",
+					"host": [
+						"swapi-graphql",
+						"netlify",
+						"app"
+					],
+					"path": [
+						".netlify",
+						"functions",
+						"index"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fourth Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json()",
+							"character=response.data.person.name",
+							"",
+							"pm.test('Person Must be Equal to Darth Vader\"', ()=> {",
+							"    pm.expect(character).to.eq(\"Darth Vader\")})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query Root ($personID:ID)\n{\n\tperson(id:$personID){\n    name\n    birthYear\n    eyeColor\n    homeworld{\n      name\n    }\n    starshipConnection{\n      starships{\n        name\n      }\n    }\n  }\n}",
+						"variables": "{\n  \"personID\":\"{{darthVaderId}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "https://swapi-graphql.netlify.app/.netlify/functions/index",
+					"protocol": "https",
+					"host": [
+						"swapi-graphql",
+						"netlify",
+						"app"
+					],
+					"path": [
+						".netlify",
+						"functions",
+						"index"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
